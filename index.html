@@ -9,7 +9,7 @@
 </head>
 <body>
     <section class="buttons-section">
-        <button type = 'button'>Create a new contact</button>
+        <button type = 'button' id="create-btn">Create a new contact</button>
         <button type = 'button'>Clear all contacts</button>
         <button type = 'button'>Clear selected contacts</button>
         <button type = 'button'>Search contacts</button>
@@ -24,9 +24,7 @@
             <input type="number" name="phone" id="phone">
             <label for="email">Email</label>
             <input type="email" name="email" id="email">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email">
-            <label for="home-address">Email</label>
+            <label for="home-address">Home Address</label>
             <input type="text" name="home-address" id="home-address">
 
             <button type="submit">Add contact</button>
@@ -35,10 +33,12 @@
     </section>
 
     <section class="contacts-section">
+        <h2>Contact list</h2>
         <div class="contacts"></div>
     </section>
 
     <section class="favorites-section">
+        <h2>Favorite contact list</h2>
         <div class="favorites"></div>
     </section>
 </body>
