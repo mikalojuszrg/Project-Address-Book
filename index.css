@@ -3,4 +3,8 @@ body .create-search-section #create-contact {
 }
 body .create-search-section #search-contact {
   display: none;
+}
+body .contacts-favorites-section {
+  display: flex;
+  justify-content: space-evenly;
 }/*# sourceMappingURL=index.css.map */
