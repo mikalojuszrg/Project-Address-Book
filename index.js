@@ -2,10 +2,10 @@ const form = document.querySelector('form');
 const createContact = document.querySelector('#create-btn')
 const clearContacts = document.querySelector('#clear-btn')
 const contactDiv = document.querySelector('.contacts');
-const favoriteDiv = document.querySelector('.favorites');
+let favoriteDiv = document.querySelector('.favorites');
 
 let contactArr = JSON.parse(localStorage.getItem('Contact')) || [];
-const favoritesArr = [];
+let favoritesArr = JSON.parse(localStorage.getItem('Favorite')) || [];
 
 const asd = localStorage.setItem('Contact', JSON.stringify(contactArr));
 
@@ -15,17 +15,20 @@ createContact.addEventListener('click', () => {
 
 clearContacts.addEventListener('click', () => {
     localStorage.clear();
+    contactArr = [];
+    favoritesArr = [];
     contactDiv.innerHTML = '';
+    favoriteDiv.innerHTML = '';
 })
 
-const renderContacts = (contacts) => {
-    contactDiv.innerHTML = '';
+const renderContacts = (contacts, placeToRender = contactDiv) => {
+    placeToRender.innerHTML = '';
+    console.log(contacts)
     contacts.forEach((contact, index) => {
         const name = document.createElement('p');
         const phone = document.createElement('p');
         const email = document.createElement('p');
         const address = document.createElement('p');
-        const addToFavBtn = document.createElement('button');
         const selectBtn = document.createElement('button');
         const EditBtn = document.createElement('button');
 
@@ -42,7 +45,24 @@ const renderContacts = (contacts) => {
             }
         })
 
+        const addToFavBtn = document.createElement('button');
         addToFavBtn.textContent = "Add to favorites";
+
+        addToFavBtn.addEventListener('click', () => {
+            favoriteDiv.innerHTML = '';
+            favoritesArr.push(contactArr[index]);
+            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
+            renderContacts(favoritesArr, favoriteDiv);
+            renderContacts(contactArr, contactDiv);
+            // favoritesArr.forEach((favorite, index) => {
+            // div.setAttribute('id', index);
+            // favoriteDiv.append(div);
+            // console.log(favoritesArr)
+            // renderContacts(favoritesArr);
+            // renderContacts(contactArr);
+            // console.log(favorite)
+            //   })
+        })
         selectBtn.textContent = "Select";
         EditBtn.textContent = "Edit";
         
@@ -70,11 +90,21 @@ const renderContacts = (contacts) => {
         div.appendChild(addToFavBtn);
         div.appendChild(selectBtn);
         div.appendChild(EditBtn);
-        contactDiv.append(div);  
+        placeToRender.append(div); 
+    
     });
 }
 
 class Contact {
+    constructor(name, phone, email, address) {
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+    }
+}
+
+class Favorite {
     constructor(name, phone, email, address) {
         this.name = name;
         this.phone = phone;
@@ -94,9 +124,20 @@ form.addEventListener('submit', (event) => {
     contactArr.push(newContact);
     localStorage.setItem('Contact', JSON.stringify(contactArr));
     renderContacts(contactArr);
+
+    // renderContacts(favoritestArr);
 })
 
+// if(renderContacts(favoritesArr)) {
+//     renderContacts(contactArr);
+// }
 
+// renderContacts(favoritesArr);
 renderContacts(contactArr);
-console.log(contactArr.length)
+
+
+if (contactArr.length === 0) {
+    contactArr.length === 0;
+    localStorage.clear();
+}
 
