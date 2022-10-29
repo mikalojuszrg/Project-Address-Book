@@ -4,6 +4,8 @@ const clearContacts = document.querySelector('#clear-btn')
 const contactDiv = document.querySelector('.contacts');
 let favoriteDiv = document.querySelector('.favorites');
 
+const searchContacts = document.querySelector('#search-btn');
+
 let contactArr = JSON.parse(localStorage.getItem('Contact')) || [];
 let favoritesArr = JSON.parse(localStorage.getItem('Favorite')) || [];
 
@@ -23,7 +25,6 @@ clearContacts.addEventListener('click', () => {
 
 const renderContacts = (contacts, placeToRender = contactDiv) => {
     placeToRender.innerHTML = '';
-    console.log(contacts)
     contacts.forEach((contact, index) => {
         const name = document.createElement('p');
         const phone = document.createElement('p');
@@ -43,26 +44,59 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
                 contactArr.length === 0;
                 localStorage.clear();
             }
+
+            favoritesArr.splice(index);
+            renderContacts(favoritesArr);
+            renderContacts(contactArr, contactDiv);
+            renderContacts(favoritesArr, favoriteDiv);
+            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
+            favoriteDiv.innerHTML = '';
+
+            if (favoritesArr.length === 0 || favoriteDiv.innerHTML === '') {
+                favoritesArr = [];
+                localStorage.removeItem('Favorite');
+            }
         })
 
-        const addToFavBtn = document.createElement('button');
+        let addToFavBtn = document.createElement('button');
         addToFavBtn.textContent = "Add to favorites";
 
         addToFavBtn.addEventListener('click', () => {
+            RemoveBtn.style.display = "block";
+            div.appendChild(RemoveBtn)
+            addToFavBtn.style.display = 'none';
+            // placeToRender.append(div); 
             favoriteDiv.innerHTML = '';
+           
             favoritesArr.push(contactArr[index]);
-            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
             renderContacts(favoritesArr, favoriteDiv);
-            renderContacts(contactArr, contactDiv);
-            // favoritesArr.forEach((favorite, index) => {
-            // div.setAttribute('id', index);
-            // favoriteDiv.append(div);
-            // console.log(favoritesArr)
-            // renderContacts(favoritesArr);
-            // renderContacts(contactArr);
-            // console.log(favorite)
-            //   })
+            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
+
+            // renderContacts(contactArr, contactDiv);
+            // div.appendChild(RemoveBtn)
+            // addToFavBtn.style.display = 'none';
+            // renderContacts(favoritesArr, favoriteDiv);
         })
+
+        const RemoveBtn = document.createElement('button');
+        RemoveBtn.addEventListener('click', (event) => {
+            const index = +event.target.parentElement.id;
+            favoritesArr.splice(index);
+            // renderContacts(favoritesArr);
+            renderContacts(contactArr, contactDiv);
+            renderContacts(favoritesArr, favoriteDiv);
+            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
+            // favoriteDiv.innerHTML = '';
+
+            if (favoritesArr.length === 0) {
+                favoritesArr = [];
+                localStorage.removeItem('Favorite');
+            }
+        })
+
+        RemoveBtn.textContent = 'Remove from favorites';
+        RemoveBtn.style.display = "none";
+        
         selectBtn.textContent = "Select";
         EditBtn.textContent = "Edit";
         
@@ -90,8 +124,16 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
         div.appendChild(addToFavBtn);
         div.appendChild(selectBtn);
         div.appendChild(EditBtn);
+        div.appendChild(RemoveBtn)
         placeToRender.append(div); 
-    
+        // placeToRender.append(favoriteDiv)
+
+        if (favoritesArr[index]) {
+            RemoveBtn.style.display = "block";
+            div.appendChild(RemoveBtn)
+            addToFavBtn.style.display = 'none';
+        }
+
     });
 }
 
@@ -133,11 +175,18 @@ form.addEventListener('submit', (event) => {
 // }
 
 // renderContacts(favoritesArr);
-renderContacts(contactArr);
+renderContacts(contactArr, contactDiv);
+renderContacts(favoritesArr, favoriteDiv);
+ 
 
 
 if (contactArr.length === 0) {
     contactArr.length === 0;
     localStorage.clear();
+}
+
+if (favoritesArr.length === 0) {
+    favoritesArr.length === 0;
+    localStorage.removeItem('Favorite');
 }
 
