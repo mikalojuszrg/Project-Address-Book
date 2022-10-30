@@ -1,3 +1,6 @@
+body .buttons-section #search {
+  display: none;
+}
 body .create-search-section #create-contact {
   display: none;
 }

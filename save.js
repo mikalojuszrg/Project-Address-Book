@@ -129,3 +129,18 @@ if (contactArr.length === 0) {
 
 renderContacts(contactArr);
 
+
+
+
+
+
+
+if (contactArr[0]) {
+    alert('zero')
+    localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
+}
+
+if (contactArr[]) {
+    alert('first')
+    localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
+}

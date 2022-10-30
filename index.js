@@ -5,14 +5,20 @@ const contactDiv = document.querySelector('.contacts');
 let favoriteDiv = document.querySelector('.favorites');
 
 const searchContacts = document.querySelector('#search-btn');
+const inputSearch = document.querySelector('#search');
 
 let contactArr = JSON.parse(localStorage.getItem('Contact')) || [];
 let favoritesArr = JSON.parse(localStorage.getItem('Favorite')) || [];
+let searchedArr = [];
 
 const asd = localStorage.setItem('Contact', JSON.stringify(contactArr));
 
 createContact.addEventListener('click', () => {
-    form.style.display = "block";
+    if (form.style.display === "none") {
+        form.style.display = "block";
+    } else {
+        form.style.display = "none";
+    }
 })
 
 clearContacts.addEventListener('click', () => {
@@ -21,6 +27,47 @@ clearContacts.addEventListener('click', () => {
     favoritesArr = [];
     contactDiv.innerHTML = '';
     favoriteDiv.innerHTML = '';
+})
+
+searchContacts.addEventListener('click', () => {
+    if (inputSearch.style.display === "none") {
+        inputSearch.style.display = "block";
+    } else {
+        inputSearch.style.display = "none";
+    }
+
+    inputSearch.addEventListener('input', (event) => {
+        event.preventDefault();
+        let b = inputSearch.value;
+        if (b) {
+            searchedArr = contactArr.filter((item) => {
+                console.log(item.name);
+                return item.name.includes(b) || item.email.includes(b)|| item.address.includes(b);
+            })
+
+            renderContacts(searchedArr, contactDiv);
+        } else {
+            renderContacts(contactArr, contactDiv);
+            renderContacts(favoritesArr, favoriteDiv);
+        }
+
+        if (b) {
+            searchedArr = favoritesArr.filter((item) => {
+                console.log(item.name);
+                return item.name.includes(b) || item.email.includes(b)|| item.address.includes(b);
+            })
+
+            renderContacts(searchedArr, favoriteDiv);
+        } else {
+            renderContacts(contactArr, contactDiv);
+            renderContacts(favoritesArr, favoriteDiv);
+        }
+
+        if (inputSearch.style.display === "none") {
+            searchedArr = [];
+        }
+    })
+
 })
 
 const renderContacts = (contacts, placeToRender = contactDiv) => {
@@ -46,11 +93,9 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
             }
 
             favoritesArr.splice(index);
-            renderContacts(favoritesArr);
             renderContacts(contactArr, contactDiv);
             renderContacts(favoritesArr, favoriteDiv);
             localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
-            favoriteDiv.innerHTML = '';
 
             if (favoritesArr.length === 0 || favoriteDiv.innerHTML === '') {
                 favoritesArr = [];
@@ -65,31 +110,22 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
             RemoveBtn.style.display = "block";
             div.appendChild(RemoveBtn)
             addToFavBtn.style.display = 'none';
-            // placeToRender.append(div); 
             favoriteDiv.innerHTML = '';
            
             favoritesArr.push(contactArr[index]);
             renderContacts(favoritesArr, favoriteDiv);
             localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
-
-            // renderContacts(contactArr, contactDiv);
-            // div.appendChild(RemoveBtn)
-            // addToFavBtn.style.display = 'none';
-            // renderContacts(favoritesArr, favoriteDiv);
         })
 
         const RemoveBtn = document.createElement('button');
-        RemoveBtn.addEventListener('click', (event) => {
-            const index = +event.target.parentElement.id;
-            favoritesArr.splice(index);
-            // renderContacts(favoritesArr);
+        RemoveBtn.addEventListener('click', () => {
+            favoritesArr.splice(index, 1);
             renderContacts(contactArr, contactDiv);
             renderContacts(favoritesArr, favoriteDiv);
-            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));
-            // favoriteDiv.innerHTML = '';
+            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));    
 
             if (favoritesArr.length === 0) {
-                favoritesArr = [];
+                favoritesArr.length === 0;
                 localStorage.removeItem('Favorite');
             }
         })
@@ -111,6 +147,7 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
 
         const contactValue = JSON.stringify(contact);
         const extractedValues = contactValue.replace('{', '').replace('}','').replaceAll('"', ' ').split(",") ;
+        console.log(contactValue)
         name.textContent = extractedValues[0];
         phone.textContent = extractedValues[1];
         email.textContent = extractedValues[2];
@@ -124,11 +161,9 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
         div.appendChild(addToFavBtn);
         div.appendChild(selectBtn);
         div.appendChild(EditBtn);
-        div.appendChild(RemoveBtn)
         placeToRender.append(div); 
-        // placeToRender.append(favoriteDiv)
 
-        if (favoritesArr[index]) {
+             if (favoritesArr[index]) {
             RemoveBtn.style.display = "block";
             div.appendChild(RemoveBtn)
             addToFavBtn.style.display = 'none';
@@ -166,20 +201,15 @@ form.addEventListener('submit', (event) => {
     contactArr.push(newContact);
     localStorage.setItem('Contact', JSON.stringify(contactArr));
     renderContacts(contactArr);
-
-    // renderContacts(favoritestArr);
 })
 
-// if(renderContacts(favoritesArr)) {
-//     renderContacts(contactArr);
-// }
+if(renderContacts(favoritesArr)) {
+    renderContacts(contactArr);
+}
 
-// renderContacts(favoritesArr);
 renderContacts(contactArr, contactDiv);
 renderContacts(favoritesArr, favoriteDiv);
  
-
-
 if (contactArr.length === 0) {
     contactArr.length === 0;
     localStorage.clear();
