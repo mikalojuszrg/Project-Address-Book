@@ -39,9 +39,11 @@ searchContacts.addEventListener('click', () => {
     inputSearch.addEventListener('input', (event) => {
         event.preventDefault();
         let b = inputSearch.value;
+        // console.log(b)
+        console.log(searchedArr)
         if (b) {
             searchedArr = contactArr.filter((item) => {
-                console.log(item.name);
+                // console.log(item.name);
                 return item.name.includes(b) || item.email.includes(b)|| item.address.includes(b);
             })
 
@@ -78,10 +80,11 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
         const email = document.createElement('p');
         const address = document.createElement('p');
         const selectBtn = document.createElement('button');
-        const EditBtn = document.createElement('button');
+        const editBtn = document.createElement('button');
 
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = "Delete";
+        buttonStyle(deleteBtn);
         deleteBtn.addEventListener('click', (event) => {
             const index = +event.target.parentElement.id;
             contactArr.splice(index, 1);
@@ -105,6 +108,7 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
 
         let addToFavBtn = document.createElement('button');
         addToFavBtn.textContent = "Add to favorites";
+        buttonStyle(addToFavBtn);
 
         addToFavBtn.addEventListener('click', () => {
             RemoveBtn.style.display = "block";
@@ -118,11 +122,15 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
         })
 
         const RemoveBtn = document.createElement('button');
-        RemoveBtn.addEventListener('click', () => {
+        RemoveBtn.addEventListener('click', (event) => {
+            indexx = favoritesArr[index];
+            indexxx = contactArr[index];
             favoritesArr.splice(index, 1);
-            renderContacts(contactArr, contactDiv);
+            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));  
             renderContacts(favoritesArr, favoriteDiv);
-            localStorage.setItem('Favorite', JSON.stringify(favoritesArr));    
+            indexx.innerHTML = '';
+            renderContacts(contactArr, contactDiv);
+            
 
             if (favoritesArr.length === 0) {
                 favoritesArr.length === 0;
@@ -132,14 +140,29 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
 
         RemoveBtn.textContent = 'Remove from favorites';
         RemoveBtn.style.display = "none";
+        buttonStyle(RemoveBtn);
+
+        function buttonStyle(button) {
+            button.style.border =  "0";
+            button.style.borderRadius =  "10px";
+            button.style.fontSize =  "15px";
+            button.style.margin =  "5px";
+            button.style.padding =  "5px";
+            button.style.cursor =  "pointer";
+        }
         
         selectBtn.textContent = "Select";
-        EditBtn.textContent = "Edit";
+        buttonStyle(selectBtn);
+
+        editBtn.textContent = "Edit";
+        buttonStyle(editBtn);
         
         const div = document.createElement('div');
         div.setAttribute('id', index);
         div.style.border = '1px solid black';
+        div.style.borderRadius = "20px"
         div.style.padding = '10px';
+        div.style.color = 'white';
         div.style.marginBottom = '10px';
         div.style.display = 'flex';
         div.style.flexDirection = 'column';
@@ -147,7 +170,6 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
 
         const contactValue = JSON.stringify(contact);
         const extractedValues = contactValue.replace('{', '').replace('}','').replaceAll('"', ' ').split(",") ;
-        console.log(contactValue)
         name.textContent = extractedValues[0];
         phone.textContent = extractedValues[1];
         email.textContent = extractedValues[2];
@@ -160,7 +182,7 @@ const renderContacts = (contacts, placeToRender = contactDiv) => {
         div.appendChild(deleteBtn);
         div.appendChild(addToFavBtn);
         div.appendChild(selectBtn);
-        div.appendChild(EditBtn);
+        div.appendChild(editBtn);
         placeToRender.append(div); 
 
              if (favoritesArr[index]) {

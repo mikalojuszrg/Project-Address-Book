@@ -1,3 +1,22 @@
+body {
+  background-color: rgb(93, 152, 192);
+  font-family: Arial, Helvetica, sans-serif;
+}
+body .buttons-section {
+  display: flex;
+  justify-content: space-around;
+}
+body .buttons-section button {
+  border-radius: 30px;
+  border: 0;
+  padding: 20px;
+  font-size: 15px;
+  cursor: pointer;
+}
+body .buttons-section button:hover {
+  background-color: rgb(20, 79, 122);
+  color: white;
+}
 body .buttons-section #search {
   display: none;
 }

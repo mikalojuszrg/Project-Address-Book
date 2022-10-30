@@ -1,5 +1,21 @@
 body {
+    background-color: rgb(93, 152, 192);
+    font-family: Arial, Helvetica, sans-serif;
     .buttons-section {
+        display: flex;
+        justify-content: space-around;
+        button {
+            border-radius: 30px;
+            border: 0;
+            padding: 20px;
+            font-size: 15px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgb(20, 79, 122);
+                color: white;
+            }
+        }
         #search {
             display: none;
         }
